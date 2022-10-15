@@ -32,7 +32,8 @@
 
 ## 模块化布局
 本项目主要是基于模块化布局实现，个人认为对于大多数展示类网站而言，这是一种比较实用的方案。以天猫/京东随意找的两个店铺首页为例:
-<div style="display:flex;">
+
+<!-- <div style="display:flex;">
   <div style="width:50%;text-align:center;">
     <img width="200px" src="./images/linshi-homepage-sliced.jpeg">
     <div style="text-align:center">林氏木业</div>
@@ -41,25 +42,26 @@
     <img width="200px" src="./images/midea-homepage-sliced.jpeg">
     <div style="text-align:center">美的</div>
   </div>
-</div>
-<!-- <table>
-<td>
-<img width="200px" src="./images/linshi-homepage-sliced.jpeg">
-<div style="text-align:center">林氏木业</div>
-</td>
-<td>
-<img width="200px" src="./images/midea-homepage-sliced.jpeg">
-<div style="text-align:center">美的</div>
-</td>
-</tr>
-</table> -->
+</div> -->
+<table align="center">
+  <td>
+  <img width="200px" src="./images/linshi-homepage-sliced.jpeg">
+  <div style="text-align:center">林氏木业</div>
+  </td>
+  <td>
+  <img width="200px" src="./images/midea-homepage-sliced.jpeg">
+  <div style="text-align:center">美的</div>
+  </td>
+  </tr>
+</table>
+
 
 由上图可知，从上到下分模块垂直布局是当前展示类网站比较通用的方案:
 
-<div style="text-align:center;">
-    <img width="300px" src="./images/linshi-homepage-sliced-marked.jpeg">
-    <div style="text-align:center">林氏木业网页分析</div>
-</div>
+<p align="center">
+  <img width="300px" src="./images/linshi-homepage-sliced-marked.jpeg">
+</p>
+
 
 <!-- ![linshi-homepage-sliced-marked](./images/linshi-homepage-sliced-marked.jpeg) -->
 同时预设模块上可默认添加响应式样式布局规则，从而可以自动实现响应式。
@@ -84,7 +86,11 @@
 - **步骤1**-对于编辑者：对外展示为一个编辑器视图，将视图层的输入，以某种规则转换为统一的Schema数据格式（前端通常以JSON保存），用来记录视图输入的配置和数据内容。
 - **步骤2**-对于查看者：将步骤1生成的JSON-Schema，以相反的规则，利用 **Vue的渲染函数** 机制，转换成查看视图，同时兼顾响应式等。
 
-![low-code-steps](./images/low-code-steps.png)
+
+<p align="center">
+    <img width="800px" src="./images/low-code-steps.png">
+</p>
+
 
 本项目基于模块化，所以步骤1比较简单，定义好JSON数据结构后，按规则生成一串JSON数组即可。主要难点有两个：
 1. 确定JSON-Schema的数据结构。
@@ -210,7 +216,9 @@ H5端/微信端定制的配置项，可包含Schema的任一属性，在特定�
 
 #### operation: string | false
 元素对应的自定激活右侧面板。如WPS/Office常用的交互，当点击一个文本时，会激活【开始】面板；当点击一个图片时，会激活【格式】面板：  
+
 ![ppt-operation](./images/ppt-operation.gif)
+
 该属性就是用于定义要激活的属性名。默认情况下，组件元素（`type： 'component'`）已经在`$options`上预设了该属性，无需额外设置：
 ```
 InputableText => 'text'面板
@@ -330,28 +338,28 @@ export default defineComponent({
 
 ******
 
-### 多平台响应式方案
+## 多平台响应式方案
 我司该项目实际上为多端平台，包含Web/小程序/APP/MS-Teams/Adobe等，所以开发时需要考虑编辑后如何在多端展示。
 
 #### 1. 移动端(除小程序)处理
 
 如前所述，本项目中模块的JSON定义支持设置移动端、分平台样式样式，所以默认支持移动端响应式，具体可以见【预览】窗口的移动端效果：
+
 ![preview-mobile](./images/preview-mobile.png)
 
 既然已支持响应式，那么不难想到，其他非浏览器端的平台，最简单的方式是使用WebView，直接嵌入H5的页面。通常的店铺主页，除了自定义的部分，还会有一些固定不变的组成部分，如头部Banner，底部Tabbar等，以美的旗舰店的京东主页为例：
 
-<div style="text-align:center;">
-    <img width="300px" src="./images/app-media-homepage-marked.jpg">
-</div>
+<p align="center">
+  <img width="300px" src="./images/app-media-homepage-marked.jpg">
+</p>
 
-本项目编辑器生成的页面，其实只展示在上图中间的【自定义区域】，顶部和底部的小程序是各店铺通用的，由其他逻辑生成。如果采用WebView方案，可在中间【自定义区域】设置一个WebView窗口，直接指向web端页面即可。
-我司APP端也是这样实现的。
+本项目编辑器生成的页面，其实只展示在上图中间的【自定义区域】，顶部和底部的小程序是各店铺通用的，由其他逻辑生成。如果采用WebView方案，可在中间【自定义区域】设置一个WebView窗口，直接指向web端页面即可。我司APP端也是这样实现的。
 
 #### 2. 小程序端处理
 然而这种方案在小程序上碰壁了。因为小程序的web-view有个强制规定:
 
-<div style="text-align:center;">
-    <img width="600px" src="./images/wx-mp-webview-doc.png">
+<div align="center">
+  <img width="600px" src="./images/wx-mp-webview-doc.png">
 </div>
 
 即小程序的WebView必须是全屏的，无法设置大小，这与上面分析的需求不符。理论上也许可以使用`<cover-view>`等方案局部覆盖实现,但效果显然好不到哪里去。所以WebView方案在小程序端行不通，需要另外实现一套小程序的渲染逻辑。
@@ -453,20 +461,28 @@ export default defineComponent({
   </style>
   ```
 
-### 自定义新的module
+
+## 自定义新的module
 
 为方便理解及生成模块，我另外开了个新页面，简单写了在线**模块生成器**，地址为：[模块生成器](https://zx69.github.io/modular-webpage-builder/#/moduleEditor.html)。代码中已经使用[require.context](https://webpack.js.org/guides/dependency-management/#requirecontext)实现了对`src/views/builder/modules`目录下`module`开头的文件的自动引入，生成后将JSON复制下来，放到`src/views/builder/modules`文件夹下，则新增模块会自动增加到编辑器左侧的模块列表中。
-### CSS样式的局限
-与其他低代码平台一样，低代码意味着低灵活性。出于简化的统一的需要，本项目的JSON-Schema不包含JS逻辑，如上文所述，所有模块的布局样式均使用纯CSS实现，只有组件元素内支持使用JS逻辑。这意味着目前模块只支持不特别负责的布局，目前预设模块最复杂的大概是这种类型的：
 
-<div style="text-align:center;">
+
+## CSS样式的局限
+与其他低代码平台一样，低代码意味着低灵活性。出于简化的统一的需要，本项目的JSON-Schema不包含JS逻辑，如上文所述，所有模块的布局样式均使用纯CSS实现，只有组件元素内支持使用JS逻辑。这意味着目前模块只支持不特别负责的布局，目前预设模块最复杂的大概是这种类型的(`modules/module11`)：
+
+
+<div align="center">
     <img width="600px" src="./images/module-11.png">
-    <div style="text-align:center">模块11</div>
 </div>
+
 
 更复杂的布局，比如瀑布流等需要JS参与的布局，当前方案不支持。如果有这种需求，可以考虑将瀑布流区域设为组件元素来解决。
 
-### grid-area属性在chrome99-102上的一个BUG
+## CSS中包含变量
+
+
+
+## grid-area属性在chrome99-102上的一个BUG
 本项目的设计稿，UI大佬有点飘了，预设模板设计了大量web端和移动端页面元素顺序不一致的情况。为适配产品设计稿，本项目的模块大量使用了`grid`布局（web端和移动端页面元素顺序不一致的实现方案，据我了解CSS里要实现元素顺序的变动，除了`grid`外，好像就只有`flex`而`order`了吧？）。
 
 然后因业务需要将页面的HTML生成为封面，我们使用了比较流行的[dom-to-image](https://github.com/tsayen/dom-to-image)库来处理。随后发现了一个浏览器的bug: 
