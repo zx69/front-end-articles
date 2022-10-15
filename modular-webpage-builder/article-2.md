@@ -61,7 +61,7 @@
   ```HTML
   <template>
     <view style="width: 100%; height: 100%;">
-      <view class="material-brochure_image-box image-container"
+      <view class="webpage-builder_image-box image-container"
         :style="{
           backgroundImage: imageType === 'background' ? `url(${croppedImgFullUrl})` : 'unset',
         }"
@@ -70,34 +70,17 @@
       </view>
     </view>
   </template>
-
   <script lang="ts">
   import {
     defineComponent, reactive, computed, ref, toRefs, PropType,
   } from 'vue';
   import { getModuleData } from '../utils';
   import { stringifyUrl } from '@/utils/oss/process';
-
   export default defineComponent({
-    name: 'material-brochure_image-box',
+    name: 'webpage-builder_image-box',
     components: {},
     props: {
-      data: {
-        type: Object,
-        required: true,
-      },
-      valueKey: {
-        type: String,
-        required: true,
-      },
-      imageType: {
-        type: String as PropType<'image' | 'background'>,
-        default: 'image',
-      },
-      // oss图片query参数对象
-      ossCropConfig: {
-        type: Object,
-      },
+      ... // 同web端
     },
     setup(props, { emit }) {
       const state = reactive({
@@ -117,7 +100,7 @@
   });
   </script>
   <style lang="scss">
-  .material-brochure_image-box{
+  .webpage-builder_image-box{
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -147,8 +130,50 @@
 更复杂的布局，比如瀑布流等需要JS参与的布局，当前方案不支持。如果有这种需求，可以考虑将瀑布流区域设为组件元素来解决。
 
 ## CSS中包含变量
+模板样式中存在一种特殊情况：CSS代码中包含变量。以`modules/module4`为例：
 
+<div align="center">
+    <img width="600px" src="./images/module-4.png" />
+</div>
 
+上图中绿框为一个图片组件`ImageBox`, 红框为一个普通的`div`,其`backgroundImage`属性值即为绿框图片`src`，并进行高斯模糊。
+
+<div align="center">
+    <img width="600px" src="./images/module4-drag-image.gif" />
+</div>
+
+这个处理流程涉及一个之前的遗留点：如何在代码里插入动态变量并响应更新。
+
+之前的`comilpeSchema`流程是将`style`属性视为静态json，直接赋值给`h`函数，这样的样式是不会动态更新。目前一个简单粗暴的处理方式是:
+
+  1. 对`style`中的变量用特殊符号表示。参考amis的[模板字符串](https://aisuda.bce.baidu.com/amis/zh-CN/docs/concepts/template)方案, 使用`${xxx}`进行标识:
+  ```javascript
+    backgroundImage: 'url(${imgUrl})';
+  ```
+  2. 在`comilpeSchema`阶段对`style`属性进行遍历，对`${xxx}`中的标识符进行变量替换
+  ```javascript
+    // 解析style属性中的变量;
+    const parseStyleValue = (styleObj: Obj, data: Obj) => {
+      const _style: Obj = {};
+      Object.entries(styleObj).forEach(([key, val]) => {
+        _style[key] = parseTplExpress(data, val);
+      });
+      return _style;
+    };
+    const comilpeSchema = (...) => {
+      ...
+      if (attrs.style && moduleData) {
+        attrs.style = parseStyleValue(attrs.style, moduleData);
+      }
+      ...
+    }
+  ```
+
+需要注意这并不是一种好办法。因为在本项目中使用的比较少（只有两处用到），所以简单处理了一下。视情况可考虑进行如下优化：
+
+1. 目前的处理需遍历`schema`树的`style`对象，如果层级较多时性能可能会受影响。可以考虑参考`vue2`/`vue3`而方式，在第一次`compileSchema`时对依赖进行收集，来规避重复遍历。
+
+2. 目前的`${xxx}`内只支持单个变量，不支持表达式计算或函数调用。如果有这样的需要，可考虑使用`eval`改写。
 
 ## grid-area属性在chrome99-102上的一个BUG
 本项目的设计稿，UI大佬有点飘了，预设模板设计了大量web端和移动端页面元素顺序不一致的情况。为适配产品设计稿，本项目的模块大量使用了`grid`布局（web端和移动端页面元素顺序不一致的实现方案，据我了解CSS里要实现元素顺序的变动，除了`grid`外，好像就只有`flex`而`order`了吧？）。
@@ -161,4 +186,8 @@ bug相关讨论：
 - `https://bugs.chromium.org/p/chromium/issues/detail?id=1305997`
 - `https://github.com/tsayen/dom-to-image/issues/410`
 
-好在`Chromev102`版本已经修复了这个问题。如果业务需要兼容上述版本的Chrome, 相关模板可能需要改用`flex`之类的css属性进行重写。
+好在`Chromev102`版本已经修复了这个问题。
+
+![chromium-bug-fix](./images/chromium-bug-fix.png)
+
+如果业务需要兼容上述版本的Chrome, 相关模板可能需要改用`flex`之类的css属性进行重写。
