@@ -175,6 +175,68 @@
 
 2. 目前的`${xxx}`内只支持单个变量，不支持表达式计算或函数调用。如果有这样的需要，可考虑使用`eval`改写。
 
+## 组件元素的事件拦截
+前面说到，本项目的设计是以组件元素（`type:'component'`）作为最小编辑单位的，因此对于鼠标相关事件，如`hover`/`click`/`mousedown`等，此类元素应该以组件整体接收。以`hover`为例，只能`hover`到组件整体，组件内的子元素不可再选中：
+
+<p align="center">
+  <img width="250px" src="./images/component-hover.gif">
+</p>
+
+一开始尝试过事件捕获、hover延时等方案，效果都不好。经思考，最后使用自定义事件和dispatchEvent实现了，代码如下：
+
+```javascript
+// 捕获事件并重新抛出.按设计,组件类型应该作为一个整体接受事件, 即组件内部元素不可单独点击等.
+// 所以对于type=component类型,在组件外层捕获响应事件, 并在组件外层以currentTarget重新抛出,
+// 这样外面接受的的ev.target就是组件外层整体元素(currentTarget)了
+export const getEventCatchAndThrowMap = (eventNames: string | string[]) => {
+  const _eventNameList = Array.isArray(eventNames) ? eventNames : [eventNames];
+  return Object.fromEntries(_eventNameList.map(evName => {
+    return [
+      evName,
+      (ev: MouseEvent) => {
+        if (ev.target !== ev.currentTarget) {
+          ev.stopPropagation();
+          const _ev = new Event(evName, { bubbles: true });
+          ev.currentTarget?.dispatchEvent(_ev);
+        }
+      },
+    ];
+  }));
+};
+
+// 调用生成events-map
+const events = props.status !== 'edit' ? null : getEventCatchAndThrowMap(['click', 'mouseover', 'mouseout', 'mousedown']);
+
+// 监听：
+<div class="inputable-text" v-on="events">
+  ...
+</div>
+```
+## 带contenteditable属性的容器滚动问题
+本项目的文本输入组件`InputableText`是基于`contenteditable`属性来进行输入状态切换的。实际使用中发现了一个问题：当输入框容器高/宽固定，且输入文本超出输入框尺寸时，输入后切换回只读状态（`contenteditable=false`）后，显示的文本会停留在输入最后的输入位置，如下图：
+
+![inputable-text-scorll](./images/inputable-text-scroll.gif)
+
+该bug的原因是经`contenteditable`属性设置的元素本质上仍然是一个`block`容器，表现形式与一般`div`类似，切换`contenteditable`并不会修改其滚动位置。
+
+参考该[问题讨论](https://stackoverflow.com/questions/33066877/scroll-back-on-unfocus-blur-of-contenteditable-element), 优化方案为：
+
+```javascript
+  /* InputableText.vue */
+  // contenteditable状态切换前,将容器滚回初始位置
+  const handleChange = () => {
+    if (!inputRef.value) {
+      return;
+    }
+    inputRef.value.style.overflow = 'scroll';
+    inputRef.value.scrollTo(0, 0);
+    inputRef.value.style.overflow = 'hidden';
+    ...
+  };
+```
+
+
+
 ## grid-area属性在chrome99-102上的一个BUG
 本项目的设计稿，UI大佬有点飘了，预设模板设计了大量web端和移动端页面元素顺序不一致的情况。为适配产品设计稿，本项目的模块大量使用了`grid`布局（web端和移动端页面元素顺序不一致的实现方案，据我了解CSS里要实现元素顺序的变动，除了`grid`外，好像就只有`flex`而`order`了吧？）。
 
