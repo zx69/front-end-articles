@@ -10,11 +10,12 @@
 
 - 演示版仓库地址：[modular-webpage-builder](https://github.com/zx69/modular-webpage-builder) 
 - 在线预览：[demo](https://zx69.github.io/modular-webpage-builder/index.html)
-- 在线模块生成器：[module-editor](https://zx69.github.io/modular-webpage-builder/#/moduleEditor.html)
+- 在线模块生成器：[module-editor](https://zx69.github.io/modular-webpage-builder/#/moduleEditor)
 
 因个人水平有限, 如代码中有bug, 或存在可以优化的内容, 欢迎指正和issue. 如果该项目对你有所帮助,欢迎Star~
 
-> 在线预览速度可能比较慢，建议梯子或者下载到本地启动。时间有限就不搞gitee版本了   
+> 1. 在线预览速度可能比较慢，建议梯子或者下载到本地启动。时间有限就不搞gitee版本了。
+> 2. 本Demo演示图片均来源于网络，如有侵权请告知，将及时删除。  
 
 
 ## 技术栈
@@ -337,6 +338,9 @@ export default defineComponent({
 ```
 至此，Schema => DOM的逻辑便完成了。使用时直接将`JSON`数据传入`<Render :schema="json" />`即可；每个`<Render>`组件即代表一个模块。
 
-为方便理解及生成模块，我另外开了个新页面，简单写了在线**模块生成器**，地址为：[模块生成器](https://zx69.github.io/modular-webpage-builder/#/moduleEditor.html)。可以在上面修改代码，并实时预览，以了解模块的生成原理。
+最后效果如下：
+![display-video-2.gif](./images/display-video-2.gif)
+
+为方便理解及生成模块，我另外开了个新页面，简单写了在线**模块生成器**，地址为：[模块生成器](https://zx69.github.io/modular-webpage-builder/#/moduleEditor)。可以在上面修改代码，并实时预览，以了解模块的生成原理。
 
 关于开发中遇到的部分技术要点，我后面另起一文讨论。
