@@ -1,22 +1,20 @@
-# 一个模块化+低代码的页面生成器的开发记录（原理篇）
-
 系列目录
-- [一个模块化+低代码的页面生成器的开发记录(原理篇)](https://github.com/zx69/front-end-articles/blob/main/modular-webpage-builder/article.md)
-- [一个模块化+低代码的页面生成器的开发记录(要点+BUG篇)](https://github.com/zx69/front-end-articles/blob/main/modular-webpage-builder/article-2.md)
+- [一个模块化+低代码的页面生成器的开发记录(原理篇)](https://juejin.cn/post/7154961270569959454)
+- [一个模块化+低代码的页面生成器的开发记录(要点+BUG篇)](https://juejin.cn/post/7154963876528783368)
+
 ## 前言
 前段时间刚好接到个需求，业务上需要开发一个低代码线上编辑器，用于卖家自定义店铺首页、以及生成宣传册\海报等附属功能。要求拖动生成，傻瓜式操作； 一次编辑，跨端响应式（web/h5/app/小程序）。独自一人折腾了半个月，基本完成第一版，自我感觉一路跨过了不少卡点，有一些值得分享的心得。所以就有了这篇文章。
 
-![builder-main-preview](./images/builder-main-preview.png)
+![builder-main-preview.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6426f4b267484ae48d0104476d845608~tplv-k3u1fbpfcp-watermark.image?)
 
 - 演示版仓库地址：[modular-webpage-builder](https://github.com/zx69/modular-webpage-builder) 
 - 在线预览：[demo](https://zx69.github.io/modular-webpage-builder/index.html)
-- 在线模块生成器：[module-editor](https://zx69.github.io/modular-webpage-builder/#/moduleEditor)
+- 在线模块生成器（演示用）：[module-editor](https://zx69.github.io/modular-webpage-builder/#/moduleEditor)
 
 因个人水平有限, 如代码中有bug, 或存在可以优化的内容, 欢迎指正和issue. 如果该项目对你有所帮助,欢迎Star~
 
 > 1. 在线预览速度可能比较慢，建议梯子或者下载到本地启动。时间有限就不搞gitee版本了。
-> 2. 本Demo演示图片均来源于网络，如有侵权请告知，将及时删除。  
-
+> 2. 本Demo演示图片均来源于网络，如有侵权请告知，将及时删除。
 
 ## 技术栈
 - 本项目使用`vue-cli`初始化，主要基于 [vue3](https://github.com/vuejs/core)技术栈 + [Typescript](https://github.com/microsoft/TypeScript) + [element-plus](https://github.com/element-plus/element-plus) 实现。
@@ -26,29 +24,26 @@
 
 - 演示Demo为Github Pages页面，数据是临时自己mock的。
 
-
 ## 模块化布局
 本项目主要是基于模块化布局实现，个人认为对于大多数展示类网站而言，这是一种比较实用的方案。以天猫/京东随意找的两个店铺首页为例:
 
 <table align="center">
-  <td>
-  <img width="200px" src="./images/linshi-homepage-sliced.jpeg">
-  <div style="text-align:center">林氏木业</div>
+  <td width="400px" align="center" >
+  <img width="200px" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/439ce6d7f1584af19b0af67207dd332b~tplv-k3u1fbpfcp-watermark.image?">
+  <div align="center">林氏木业</div>
   </td>
-  <td>
-  <img width="200px" src="./images/midea-homepage-sliced.jpeg">
-  <div style="text-align:center">美的</div>
+  <td width="400px" align="center" >
+  <img width="200px" src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00a5d7bb0d59421ca14e241c9a0938ad~tplv-k3u1fbpfcp-watermark.image?">
+  <div align="center">美的</div>
   </td>
   </tr>
 </table>
 
-
 由上图可知，从上到下分模块垂直布局是当前展示类网站比较通用的方案:
 
 <p align="center">
-  <img width="300px" src="./images/linshi-homepage-sliced-marked.jpeg">
+  <img width="300px" src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29499490c23744c3939b30d8d2f2fb3f~tplv-k3u1fbpfcp-watermark.image?">
 </p>
-
 
 同时可以预先在每个模块上设置好响应式样式布局，从而自带响应式。
 
@@ -62,8 +57,6 @@
 
 
 ## 低代码的处理流程
-在正式开发之前，需要把一些问题先想清楚。 
-
 对于低代码平台的处理流程，个人理解包含两个层次:
 
 - **步骤1**（transfer阶段）`视图层输入 => JSON`
@@ -74,7 +67,7 @@
   - 具体到`Vue`框架，是借助**Vue的渲染函数**，将JSON转换成`h(...)`的格式，然后再生成DOM输出
 
 <p align="center">
-    <img width="800px" src="./images/low-code-steps.png">
+    <img width="800px" src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aeb1f6b84f434a5e8644ab9aae7aed75~tplv-k3u1fbpfcp-watermark.image?">
 </p>
 
 本项目基于模块化，所以步骤1比较简单，定义好JSON数据结构后，按规则生成一串JSON数组即可。主要难点有两个：
@@ -87,7 +80,7 @@
 ## 定义JSON-Schema数据结构
 对应于上图可知，初始开发前需要确认一个关键问题：JSON的数据结构。这个就如同框架的api体系，是个容易忽略，但其实非常关键的问题，如果数据结构没确认好，后续的转换和解析步骤都会受影响。  
 
-实用的Schema的结构应该满足以下特点：
+实用的Schema的结构应该是有以下特点：
   1. 结构：多级树形的json, 由父子级关系串联而成，且每一级节点的结构应该类似，以便在解析时可以利用**递归**来生成Vue渲染函数。  
   2. 数据：最终页面必然包含一些动态数据，比如图片URL,标题文本等。这些数据的结构纪要便于存储，又要便于提取出来编辑。
   3. 样式：能以合理的信息合并默认样式和自定义样式，并适配多平台的响应式。
@@ -124,6 +117,7 @@ export type CommonCompProp<T extends SchemaType = SchemaType> = {
 ```
 
 个别说明如下：  
+
 #### 元素类型 type： 'module' | 'block' | 'component'
 json节点元素的类型。百度[amis](https://github.com/baidu/amis)项目中包含了特别多的元素类型，本项目经过简化，最后划分为以下几种类型： 
     
@@ -151,8 +145,10 @@ json节点元素的类型。百度[amis](https://github.com/baidu/amis)项目中
 #### 3.1 `component：'InputableText'`(组件-可编辑文本)
 - 一般的文本/标题.编辑阶段双击显示为输入框, 预览阶段显示为纯文本;
 - 基于contenteditable属性实现.
+
 #### 3.2 `component：'ImageBox'`(组件-图片盒子)
 - 接收图片拖入的容器.聚焦时会出现[裁剪图片]按钮
+
 #### 3.3 `component：'ProductBox'`(组件-商品盒子)
 - 业务需要的商品的单元组件.因本Demo展示的是店铺首页, 通常将包含大量商品平铺图,所以提取为组件元素.可根据业务需要自行替换.
 
@@ -200,9 +196,9 @@ export const moduleComponentsMap = {
 > 2. 对微信端的判断, 本项目采用`userAgent.includes('miniProgram')`
 
 #### operation: string | false
-元素聚焦时默认激活的右侧面板。如WPS/Office常用的交互，当点击一个文本时，会激活【开始】面板；当点击一个图片时，会激活【格式】面板：  
+元素聚焦时默认激活的右侧面板。如WPS/Office常用的交互，当点击一个文本时，会激活【开始】面板；当点击一个图片时，会激活【格式】面板：
 
-![ppt-operation](./images/ppt-operation.gif)
+![ppt-operation.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2d1203e3bbc4cc1bd0cce5ac14bace8~tplv-k3u1fbpfcp-watermark.image?)
 
 该属性就是用于定义要激活的默认面板的属性名。默认情况下，组件元素（`type： 'component'`）已经在`$options`上预设了该属性，无需额外设置：
 ```
@@ -219,7 +215,6 @@ ImageBox => 'image'面板
 如前所述，JSON-Schema渲染成DOM的核心思路，是使用Vue的渲染函数（h函数）。由于h函数的入参与Schema有所差异，在此之前，要先对Schema进行配置项的计算、规范化及归并。
 
 这里使用一个对象来保存转换策略（策略模式的思路），按元素类型提取各自的属性：
-
 ```javascript
 // 规范化nodeSchema策略集合（策略模式）
 const normalizeStrategies = {
@@ -252,7 +247,7 @@ const normalizeStrategies = {
 接下来是分层次、递归地将JSON-Schema转换为h函数。简化后的核心compiler逻辑为：
 
 ```javascript
-// 递归将JSON-Schema转换为h函数
+// 将JSON-Schema转换为h函数
 const comilpeSchema = (
   nodeSchema: CommonCompProp<SchemaType>, // schema
   renderData?: Obj, // module的data
@@ -260,11 +255,12 @@ const comilpeSchema = (
   config: { mode: PreviewMode, status: RenderStatus } = { mode: 'pc', status: 'preview' }, // 配置选项
 ): VNode => {
   ...
-  
+
   // 规范化策略
   const normalizeStrategy = normalizeStrategies[nodeSchema.type];
   // schema规范化
   const vnode = normalizeStrategy(nodeSchema, config.status);
+
   // 模块汇总的data
   const moduleData = isModule(nodeSchema) ? nodeSchema.data : renderData;
   ...
@@ -299,8 +295,8 @@ const comilpeSchema = (
       ))),
   );
 };
-```
 
+```
 再定义一个模块Render组件来声明render函数即可（或者直接使用函数式组件）：
 ```javascript
 // src/views/builder/editor/components/Renderer.ts
@@ -321,12 +317,13 @@ export default defineComponent({
   },
 });
 ```
-
 至此，Schema => DOM的逻辑便完成了。使用时直接将`JSON`数据传入`<Render :schema="json" />`即可；每个`<Render>`组件即代表一个模块。
 
 最后效果如下：
-![display-video-2.gif](./images/display-video-2.gif)
-
+![display-video-2.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ab395b8eea849adab038df7e84d9996~tplv-k3u1fbpfcp-watermark.image?)
+    
 为方便理解及生成模块，我另外开了个新页面，简单写了在线**模块生成器**，地址为：[模块生成器](https://zx69.github.io/modular-webpage-builder/#/moduleEditor)。可以在上面修改代码，并实时预览，以了解模块的生成原理。
 
 关于开发中遇到的部分技术要点，我后面另起一文讨论。
+
+
