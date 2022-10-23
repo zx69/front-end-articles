@@ -212,6 +212,50 @@ const events = props.status !== 'edit' ? null : getEventCatchAndThrowMap(['click
   ...
 </div>
 ```
+
+## 自定义border的dashed样式间距
+设置边框的间距是文本/形状编辑器的常见需求。如word中：
+
+![image.png](./images/word-border-settings.png)
+
+这种需求在SVG中可通过`stroke-dasharray`和`stroke-dashoffset`实现，然后对于一般的DOM，CSS属性只提供了`dotted`、`dashed`等几种边框样式，却没提供自定义虚线边框的点间距功能。替代方案是使用`background`模拟（该方法会同时设置边框宽度`border-width`）：
+```
+// 计算模拟虚线边框的background属性：
+const getBorderStyle = (color: string, solidRadio: string, unitLength: string, borderWidth = 2) => {
+  return {
+    backgroundImage: `linear-gradient(to right, ${color} 0%, ${color} ${solidRadio}, transparent ${solidRadio}),
+        linear-gradient(to right, ${color} 0%, ${color} ${solidRadio}, transparent ${solidRadio}),
+        linear-gradient(to bottom, ${color} 0%, ${color} ${solidRadio}, transparent ${solidRadio}),
+        linear-gradient(to bottom, ${color} 0%, ${color} ${solidRadio}, transparent ${solidRadio})`,
+    backgroundSize: `${unitLength} ${borderWidth}px, ${unitLength} ${borderWidth}px, ${borderWidth}px ${unitLength}, ${borderWidth}px ${unitLength}`,
+    backgroundRepeat: 'repeat-x, repeat-x, repeat-y, repeat-y',
+    backgroundPosition: 'top left, bottom left, top left, top right',
+  };
+};
+// 属性下拉菜单列表：
+const borderStyleOptions = [
+  {
+    value: 'solid',
+    style: getBorderStyle('#222222', '100%', '20px'),
+  },
+  {
+    value: 'long-dashed',
+    style: getBorderStyle('#222222', '70%', '20px'),
+  },
+  {
+    value: 'dashed',
+    style: getBorderStyle('#222222', '70%', '10px'),
+  },
+  {
+    value: 'dotted',
+    style: getBorderStyle('#222222', '50%', '6px'),
+  },
+];
+```
+效果如下：
+
+![image.png](./images/border-style-settings.png)
+
 ## 带contenteditable属性的容器滚动问题
 本项目的文本输入组件`InputableText`是基于`contenteditable`属性来进行输入状态切换的。实际使用中发现了一个问题：当输入框容器高/宽固定，且输入文本超出输入框尺寸时，输入后切换回只读状态（`contenteditable=false`）后，显示的文本会停留在输入最后的输入位置，如下图：
 
