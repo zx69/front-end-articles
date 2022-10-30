@@ -86,6 +86,7 @@ http.createServer(function(req, res) {
 
 6. 本地的node服务器路径下会出现一个新的写入JSON文件，打开并格式化，可见就是我们原本预期的订单列表数据：
 
+  ![you163.com](./images/example-you163-3.png)
 
 最后再贴另一个拦截豆瓣请求的示例：
 
