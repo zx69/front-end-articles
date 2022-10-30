@@ -1,11 +1,15 @@
 
 项目仓库地址: [request-retransmission-chrome-extension](https://github.com/zx69/request-retransmission-chrome-extension)
 
+因个人水平有限, 如代码中有bug, 或存在可以优化的内容, 欢迎指正和issue. 如果该项目对你有所帮助,欢迎Star~
+## 背景
 这个是几年前的一个项目. 当时我在一家做智能仓储机器人的公司, 当时我司与一个客户达成初步合作意向, 打算在客户的仓库使用我司的仓储管理方案. 那个客户是菜鸟平台的WMS(仓库管理系统), 原本他们的业务逻辑是:
 
 ![理想方案](./images/before.png)
 
-所以业务上出现一个需求: 需要将菜鸟平台的实时订单推送到我司自身的WMS系统, 然后才好进行数据处理. 
+所以要建立合作，前提是需要实现一个需求: 需要将菜鸟平台的实时订单推送到我司自身的WMS系统, 然后才好进行数据处理. 
+
+#### 理想流程
 
 不难想到, 这种情况最简单的解决办法是: 使用菜鸟WMS的账号密码, 调用菜鸟WMS的登录接口, 获取到它的的登录凭证(cookie/session等), 然后用这个凭证直接调用菜鸟WMS的订单列表接口来拉取订单:
 
@@ -13,9 +17,9 @@
 
 但实测发现, 菜鸟WMS的登录认证比想象中的复杂(不愧是大厂出品), 似乎有校验IP或定位之类的机制, 别说通过后端去拉接口, 就连在异地浏览器上按常规流程输入账号密码都无法登录 (隔的时间有点久了, 具体报错记不清了).
 
-![理想方案](./images/error.png)
-
 所以这个方案否了. 只能另想方案. 
+
+#### 最终流程
 
 经过商讨, 我们决定先采用一种比较简单粗暴的解决办法来拉取订单进行测试, 等到确定了最终合作意向, 再由合作方去向菜鸟申请专门的账号给我司使用. 该方案如下: 
 
@@ -25,14 +29,222 @@
 
 ![理想方案](./images/after.png)
 
-> 这种需求现在其实可以借助"油猴"来注入脚本实现,不需要专门开发一个扩展程序.当时为啥没用油猴脚本:
-> 1. 当时好像还没有油猴扩展程序(或者名气还不显,我没听说)
-> 2. 这种商业合作用油猴脚本会给人一直不专业的感觉,还是开发一个扩展程序逼格高.另外扩展程序上可以设置在特定拦截页面高亮, 这样也专业点
+我之前没有开发过Chrome扩展程序，但因为需求功能相对单一，而且相关文档齐全，想来不难，那就开搞把。
 
-这样功能相对单一的扩展程序, 本身并不复杂, 那就开搞吧.然而实际开发时很快就遇到了一个巨大的卡点: chrome扩展程序的[webRequest - API](https://developer.chrome.com/docs/extensions/reference/webRequest/), 压根不支持获取 responseBody(吐血)! 能获取到responseHeaders/requestBody, 能获取到response statusCode, 但偏偏没有把responseBody暴露出来. 原因不难猜, 估计是又出于安全的考虑了.
+## 获取ResponeseBody的难题
 
-![stackoverflow-noway-to-get-response](./images/stackoverflow-noway-to-get-response.png)
+然而实际开发时很快就遇到了一个巨大的卡点: chrome扩展程序的[webRequest - API](https://developer.chrome.com/docs/extensions/reference/webRequest/), 压根不支持获取 responseBody(吐血)... 能获取到responseHeaders/requestBody, 能获取到statusCode, 但偏偏没有把responseBody暴露出来. 原因不难猜, 估计是又出于安全的考虑了.
 
-折中方式当前也有, 就是开启
+![blog-noway-to-get-resposeBody](./images/blog-noway-to-get-resposeBody.jpg)
 
+（有兴趣的同学可以看看Chromium论坛上对于这个问题的吐槽：[Chromium帖子](https://bugs.chromium.org/p/chromium/issues/detail?id=487422). ）
 
+从网上查到的信息看，遇到这个问题的同学似乎不少，而常用的解决方案主要有两种：
+
+方案1：使用 `chrome.debugger` API开启调试模式。这也是大多数网友选择的方案。调试模式下允许获取responseBody，唯一缺点是会出现一个浏览器顶部会出现一个难看的调试横条，如下图：
+
+![chrome-debugger-bar](./images/chrome-debugger-bar.png)
+
+方案2：使用`chrome.devtools` API。这种方法更不适合，需要一直开启`Chrome Devtools`才能实现。
+
+以上两种方案虽然可行，特别是方案1，除了有个提示条也没发现什么别的毛病。但老板不同意，原因是这种提示条显得业余(捂脸)，也会让人担心有隐私泄露风险而不放心使用；用于demo还可以，但对于面向客户的成熟商业产品则不太适合。
+
+只能另想方案。
+## 最优方案：注入脚本
+
+后来查了大半天的资料，终于在[这篇文章](https://www.moesif.com/blog/technical/apirequest/How-We-Captured-AJAX-Requests-with-a-Chrome-Extension/)中找到一个有点hack，但真正实用的答案: 
+
+**可以通过扩展程序injected_script注入，改写XMLHttpRequest对象，从而在Ajax响应时将responseBody发射出来**。 
+
+> 这是一种猴子补丁(Monkey patch)的思路，虽然现代的Javascript规范一般都不推荐使用这种修复原型的方法，一般业务功能开发我也非常不推荐这样做，但对于工具类库来说，hack一点也无可厚非。
+
+## 拦截原理
+
+#### XMLHttpRequest的替换逻辑
+众所周知，Ajax使用XMLHttpRequest发送请求，最简单的例子：
+```javascript
+const xhr = new XMLHttpRequest();
+xhr.onload=function(){
+  if(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304){
+    alert(xhr.reaponseText);
+  }
+};
+xhr.open('get', 'example.com/url', true);
+xhr.send(null);
+```
+从上述示例可知，只要能进入`xhr.onload`的函数内部，就能拿到responseBody了。要达到这个目的，可以使用“猴子补丁”的思路，对`XMLHttpRequest`的`send`方法进行patch。
+
+#### 注入脚本
+
+chrome扩展程序的[Content Script API](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)提供了往一个网站注入一段脚本的功能，这给我们提供了注入patch脚本的途径。
+
+![chrome-extension原理](./images/chrome-extension-basic.png)
+
+通过`contentScript`将我们对XMLHttpRequest的改写逻辑注入特定网页，则获取请求的responseBody就轻而易举了
+
+> 个人猜测鼎鼎大名的油猴插件（tempermonkey）也是通过这种方式注入自定义脚本的吧。
+
+## 实现逻辑
+
+常规的chrome扩展程序主要包含以下内容：
+- `manifect.json`: 配置json
+- `background.js`: 基础脚本
+- `options.js`及`options.html`: 选项页面代码及脚本
+- `popup.html`: 按钮下拉菜单页面，本项目没有
+- `contentScript`相关
+
+这里只说`contentScript`相关代码. 其他的代码比较简单，详见[github仓库](https://github.com/zx69/request-retransmission-chrome-extension)
+
+1. 首先实现`XMLHttpRequest`的补丁：
+```javascript
+// myXHRScript.js
+(function(xhr) {
+  var XHR = xhr.prototype;
+  var open = XHR.open;
+  var send = XHR.send;
+
+  // 对open进行patch 获取url和method
+  XHR.open = function(method, url) {
+    this._method = method;
+    this._url = url;
+    return open.apply(this, arguments);
+  };
+  // 同send进行patch 获取responseData.
+  XHR.send = function(postData) {
+    this.addEventListener('load', function() {
+      var myUrl = this._url ? this._url.toLowerCase() : this._url;
+      if(myUrl) {
+        if ( this.responseType != 'blob' && this.responseText) {
+          // responseText is string or null
+          try {
+            var arr = this.responseText;
+
+            // 因为inject_script不能直接向background传递消息, 所以先传递消息到content_script
+            window.postMessage({'url': this._url, "response": arr}, '*');
+          } catch(err) {
+            console.log(err);
+            console.log("Error in responseType try catch");
+          }
+        }
+      }
+    });
+    return send.apply(this, arguments);
+  };
+})(XMLHttpRequest);
+```
+
+2. 因为`inject_script`不能直接与`background.js`交流，所以借助`content_script.js`实现转接逻辑，接受responseBody，并转发到`background.js`：
+
+```javascript
+// content_script.js
+let targetUrl = '';
+let targetOrigin = '';
+
+$(function(){
+  chrome.storage.sync.get(['targetUrl','targetOrigin', 'requestUrl'], function(data) {
+    ...
+    targetUrl = data.targetUrl;
+    targetOrigin = data.targetOrigin;
+
+    // content_script与inject_script的消息通知通过postMessage进行
+    // 监听inject_script发出的消息
+    window.addEventListener("message", (e) => {
+      if(!e.data || Object.keys(e.data).length === 0 ){
+        return;
+      }
+      // 检查收到的message是否是要监听的
+      if(!targetOrigin
+        || e.origin.indexOf(targetOrigin) === -1
+        || !targetUrl
+        || !e.data.url
+        || e.data.url.indexOf(targetUrl) === -1
+      ){
+        return;
+      }
+      let responseDataList = null;
+      // 使用try-catch兼容接收到的message格式不是对象的异常情况
+      try{
+        responseDataList = JSON.parse(e.data.response);
+        // 发消息给background.js，并接收其回复
+        chrome.runtime.sendMessage({data: responseDataList}, {}, function(res){
+          // 收到回复后在页面弹出提醒
+          createContentMsgNotice(res.type, res.message);
+        })
+      }catch(e){
+        alert('获取的数据有误，请联系管理员！');
+      }
+    }, false);
+  });
+});
+```
+
+3. 在`background.js`接受到`responseBody`后，将数据转发到特定地址:
+
+```javascript
+// background.js
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  $.ajax({
+    url: requestUrl,
+    type: requestMethod || 'POST',
+    contentType: "application/json",
+    data: JSON.stringify(request.data),
+    success: (msg) => {
+      console.log(msg);
+      // 使用sendResponse向消息源回传响应消息
+      sendResponse({
+        type: Number(msg.code) === 200 ? 'success' : 'danger',
+        message: msg.message
+      });
+    },
+    error: (xhr, errorType, error) => {
+      sendResponse({
+        type: 'danger',
+        message: `${errorType}: ${error}`,
+      });
+    }
+  });
+  // 异步响应sendMessage的写法：异步接收要求返回turn，从而使sendMessage可以异步接收回应消息
+  return true;
+});
+
+```
+
+4.最后，再将相关的几个js文件注册到`manifest.json`:
+
+```json
+{
+  "manifest_version": 2,
+  ...
+  "background": {
+    "scripts": ["zepto.min.js", "background.js"]
+  },
+ ...
+  "content_scripts": [
+    {
+     "matches": ["*://*/*"],
+      "run_at": "document_start",
+      "js": ["zepto.min.js","inject.js", "msgNotice.js","content_script.js"],
+      "css": ["msgNotice.css"]
+    }
+  ],
+  // 注入inject脚本
+  "web_accessible_resources": ["myXHRScript.js"]
+}
+
+```
+然后就OK了，responseBody拦截完成。
+
+为了方便有需求的同学直接安装并调试具体代码，后面我再开一文写一下本扩展程序的安装使用方法，以便直接调试。
+## 总结
+
+这个项目是个功能单一的扩展程序，大概细节如上述，具体代码详见仓库。从上述的示例可知，在浏览器上安装扩展程序存在一定的安全隐患，特别是非官方来源的。即使Chrome以及对扩展程序的权限做了种种限制（比如禁止webRequest API读取`responseBody`）,但仍然有漏洞可以钻。像用户订单这么隐私信息都能通过上述方法轻而易举的获取到。所以我们日常使用浏览器最好只从官网下载并安装。
+
+另有一些需注意的点：
+
+1. 由于采用的是改写XMMHttpReques请求，所以只适用于走Ajax方式获取的请求，也就是说后端渲染的页面（前后端未分离、SSR等）无法通过这种方法拦截。上面的例子使用WY严选来作为示范，也是出于这个原因——因为阿里、京东等老牌电商都是后端渲染的，不好拿...
+
+2. 这是个几年前的项目了（大概19年的样子），最近写这篇文章的时候试了一下功能还是正常的，但最近的浏览器兼容性不敢保证。听说最近chrome扩展程序的manifest已经升级到V3了，因为时间有限，没有去做新版迁移，有兴趣的同学可以自己尝试。
+
+3. 最近发现这种需求现在貌似可以借助"油猴(tempermonkey)"来注入脚本实现,不需要专门开发一个扩展程序.当时为啥没用油猴脚本呢？一个是当时好像还没有油猴扩展程序(或者名气还不显,我没听说)，二是商业合作用油猴脚本会给人一直不专业的感觉,还是开发一个扩展程序逼格高.另外扩展程序上可以设置在特定拦截页面高亮, 这样也专业点。
+
+4. 本扩展程序因产品要求，在触发转发时右侧会给出MessageBox进行提醒，以便告知用户我们正在转发他的数据，免得他们担心我们会监听额外的请求。那个弹框写的比较糙，不需要的可以去掉。
