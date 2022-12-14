@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script type="module">
+    const { createApp, ref,h, nextTick, render, effect  } = Vue;
+    const name = ref('a');
+    const handleClick = () => {
+      name.value = 'b';
+      Promise.resolve().then(() => {
+        const text = document.querySelector("#app").textContent;
+        console.log(text);
+      });
+      name.value = 'c';
+    }
+    const vnode = () => h('div', {onClick: () => handleClick() }, [name.value]);
+
+    const effectFn = () => {
+      render(vnode(), document.querySelector('#app'))
+    }
+    effect(effectFn, {
+      scheduler: () => queueJob(effectFn),
+    })
+
+    const p = Promise.resolve()
+    const queue = new Set()
+    let isFlushing = false
+    function queueJob(job) {
+      queue.add(job)
+      if (!isFlushing) {
+        isFlushing = true
+        p.then(() => {
+          try {
+            queue.forEach(job => job())
+          } finally {
+            isFlushing = false
+          }
+        })
+      }
+    }
+  </script>
+</body>
+</html>

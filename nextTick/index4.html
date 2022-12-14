@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<body> 
+  <div id="app"></div>
+  <script>
+    const appEl = document.querySelector('#app');
+    appEl.innerHTML = 'a';
+    
+    const p = Promise.resolve()
+    const queue = new Set()
+    let isFlushing = false
+    function queueJob(job) {
+      queue.add(job)
+      if (!isFlushing) {
+        isFlushing = true
+        p.then(() => {
+          try {
+            queue.forEach(job => job())
+          } finally {
+            isFlushing = false
+          }
+        })
+      }
+    }
+
+    console.log('我是a');
+    // queueJob(() => {
+    //   console.log('我是b');
+    //   appEl.innerHTML = 'b';
+    // });
+    Promise.resolve().then(() => {
+      const text = appEl.textContent;
+      console.log('我在nextTick里面! 我的值是: ', text);    
+    })
+    queueJob(() => {
+      console.log('我是c');
+      appEl.innerHTML = 'c';
+    });
+  </script>
+</body>
+</html>

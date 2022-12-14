@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+  <script>
+    //DOM渲染
+    let dom = document.createElement("div");
+    dom.className = "box";
+    console.log("createElement");
+    document.body.appendChild(dom);
+    console.log("append Child");
+  
+    //定时器
+    setTimeout(() => {
+        alert("setTimeout 0");
+    }, 0)
+  
+    // Promise
+    let p1 = new Promise((resolve, reject) => {
+        console.log("p1 Promise executor");
+        setTimeout(resolve("result1"), 0);
+    }).then((value) => {
+        console.log("p1 Promise then:", value);
+    })
+  
+    let p2 = Promise.resolve("result2").then((value) => {
+        console.log("p2 Promise then:", value);
+    })
+    // 同步alert
+    console.log("end");
+    alert("第一个script结束");
+  </script>
+  <script>
+    alert("元素出现了吗?");
+  </script>
+</body>
+</html>

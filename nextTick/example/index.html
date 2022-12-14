@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script type="module">
+    const { createApp, ref,h, nextTick  } = Vue
+
+    const VueComp = {
+      setup() {
+        const name = ref('a');
+        const handleClick = () => {
+          name.value = 'b';
+          nextTick(() => {
+            const text = document.querySelector("#app").textContent;
+            console.log(text);
+          });
+          name.value = 'c';
+        }
+        return () => {
+          return h('div', {onClick: () => handleClick() }, [name.value])
+        }
+      },
+    };
+    const app = createApp(VueComp).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // scyn -> micro -> render -> macro
+    document.body.style = 'background: blue';
+    console.log(document.body.style.background);
+    alert(document.body.style.background)
+    Promise.resolve().then(() => {
+      document.body.style = 'background: green';
+      console.log(document.body.style.background);
+      alert(document.body.style.background)
+    })
+    setTimeout(() => {
+      document.body.style = 'background: red';
+      console.log(document.body.style.background);
+      alert(document.body.style.background)
+    }, 0)
+  </script>
+</body>
+</html>
