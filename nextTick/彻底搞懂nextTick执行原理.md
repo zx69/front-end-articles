@@ -227,14 +227,102 @@ function queueJob(job) {
 ```
 #### 手写一个Vue的异步更新
 
+```
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script type="module">
+    const { createApp, ref,h, nextTick, render, effect  } = Vue;
+    const VueComp = {
+      setup() {
+        const name = ref('a');
+        const handleClick = () => {
+          name.value = 'b';
+          nextTick(() => {
+            const text = document.querySelector("#app").textContent;
+            console.log(text);
+          });
+          name.value = 'c';
+        }
+        return {
+          name,
+          handleClick,
+        }
+      },
+      render(){
+        return h('div', {onClick: () => this.handleClick() }, [this.name.value])
+      }
+    };
+    const setupResult = VueComp.setup();
 
-let setupResult = VueComp.setup();
+    const vnode = VueComp.render.bind(setupResult);
 
-effect(() => {
-  setupResult();
-})
+    const effectFn = () => {
+      render(vnode(), document.querySelector('#app'))
+    }
+    effect(effectFn, {
+      scheduler: () => queueJob(effectFn),
+    })
 
-## 误区三: nextTick偶尔失效的问题
+    const p = Promise.resolve()
+    const queue = new Set()
+    let isFlushing = false
+    function queueJob(job) {
+      queue.add(job)
+      if (!isFlushing) {
+        isFlushing = true
+        p.then(() => {
+          try {
+            queue.forEach(job => job())
+          } finally {
+            isFlushing = false
+          }
+        })
+      }
+    }
+  </script>
+</body>
+</html>
+```
+## 更简化版本
+```
+<!DOCTYPE html>
+<html lang="en">
+<body> 
+  <div id="app"></div>
+  <script>
+    const appEl = document.querySelector('#app');
+    appEl.innerHTML = 'a';
+    
+    const queue = new Set()
+    function queueJob(job) {
+      queue.add(job)
+      Promise.resolve().then(() => {
+        queue.forEach(job => job())
+      })
+    }
+
+    console.log('我是a');
+    // queueJob(() => {
+    //   console.log('我是b');
+    //   appEl.innerHTML = 'b';
+    // });
+    Promise.resolve().then(() => {
+      const text = appEl.textContent;
+      console.log('我在nextTick里面! 我的值是: ', text);    
+    })
+    queueJob(() => {
+      console.log('我是c');
+      appEl.innerHTML = 'c';
+    });
+  </script>
+</body>
+</html>
+```
+
+
 ## nextTick"失效"问题
 
 

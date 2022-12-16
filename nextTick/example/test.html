@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <button>change</button>
+  <script>
+    document.querySelector('button').onclick = function(){
+       // 同步任务
+      document.body.style = 'background: blue';
+      console.log('同步任务: 当前背景色: ', document.body.style.background);
+      alert('同步任务: 当前背景色: ' + document.body.style.background);
+      // 微任务
+      Promise.resolve().then(() => {
+        document.body.style = 'background: green';
+        console.log('微任务: 当前背景色: ', document.body.style.background);
+        alert('微任务: 当前背景色: ' + document.body.style.background);
+      });
+      // 宏任务
+      setTimeout(() => {
+        document.body.style = 'background: red';
+        console.log('宏任务: 当前背景色: ', document.body.style.background);
+        alert('宏任务: 当前背景色: ' + document.body.style.background);
+      }, 0)
+    }
+  </script>
+</body>
+</html>
