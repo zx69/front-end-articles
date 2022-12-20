@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net" modified="2022-12-20T03:02:17.740Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" etag="6Q4EYcZbaKvQfJ31FMZe" version="20.7.4" type="github">
+  <diagram id="BLVuhZjnWH5w17rQG87_" name="第 1 页">
+    <mxGraphModel dx="2440" dy="1360" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="727" pageHeight="669" background="#F4F1DE" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-27" style="edgeStyle=orthogonalEdgeStyle;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Lucida Console;fontSize=16;curved=1;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-3" target="_0wtHSRPihGLpyA4_5dn-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="298" />
+              <mxPoint x="540" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-28" value="渲染为" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;fontColor=#CC0066;labelBackgroundColor=#f4f1de;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-27">
+          <mxGeometry x="0.2338" y="-7" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-29" style="edgeStyle=orthogonalEdgeStyle;curved=1;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.55;entryY=-0.058;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-3" target="_0wtHSRPihGLpyA4_5dn-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-30" value="突变" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=16;fontFamily=Lucida Console;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-29">
+          <mxGeometry x="0.2463" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-31" style="edgeStyle=orthogonalEdgeStyle;curved=1;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-3" target="_0wtHSRPihGLpyA4_5dn-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-33" value="旧vnode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;fontColor=#CC0066;labelBackgroundColor=#f4f1de;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-31">
+          <mxGeometry x="-0.0632" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-3" value="(ref)&lt;br style=&quot;font-size: 16px;&quot;&gt;name.value=&#39;a&#39;" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=2;hachureGap=8;fillColor=#1ba1e2;fillStyle=solid;sketch=1;fontSize=16;fontFamily=Lucida Console;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+          <mxGeometry x="530" y="230" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-32" style="edgeStyle=orthogonalEdgeStyle;curved=1;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-4" target="_0wtHSRPihGLpyA4_5dn-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-34" value="新vnode" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;fontColor=#CC0066;labelBackgroundColor=#f4f1de;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-32">
+          <mxGeometry x="-0.2619" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-4" value="(ref)&lt;br style=&quot;font-size: 16px;&quot;&gt;name.value=&#39;b&#39;" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=2;hachureGap=8;fillColor=#0050ef;fillStyle=solid;sketch=1;fontSize=16;fontFamily=Lucida Console;fontColor=#ffffff;strokeColor=#001DBC;" vertex="1" parent="1">
+          <mxGeometry x="530" y="450" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Lucida Console;fontSize=16;sketch=1;curveFitting=1;jiggle=2;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-6" target="_0wtHSRPihGLpyA4_5dn-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-24" value="渲染为" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;labelBackgroundColor=#f4f1de;fontColor=#CC0066;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-21">
+          <mxGeometry x="-0.0428" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-6" target="_0wtHSRPihGLpyA4_5dn-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-26" value="effect&lt;br&gt;包裹" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;labelBackgroundColor=#f4f1de;fontColor=#CC0066;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-25">
+          <mxGeometry x="-0.2995" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-6" value="&amp;lt;div&amp;gt;{{ name }}&amp;lt;/div&amp;gt;" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#d5e8d4;sketch=1;curveFitting=1;jiggle=2;fontSize=16;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-35" style="edgeStyle=orthogonalEdgeStyle;curved=1;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-9" target="_0wtHSRPihGLpyA4_5dn-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-9" value="&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;font color=&quot;#0066cc&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;(old vnode tree)&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;span style=&quot;background-color: initial; font-size: 16px;&quot;&gt;&amp;nbsp;{&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/span&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;type: &#39;div&#39;,&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 16px;&quot;&gt;children: &#39;a&#39;&lt;/span&gt;&lt;/blockquote&gt;&amp;nbsp;}&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#e3c800;sketch=1;fillStyle=solid;align=left;fontSize=16;fontFamily=Lucida Console;fontColor=#000000;strokeColor=#B09500;" vertex="1" parent="1">
+          <mxGeometry x="820" y="170" width="200" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-36" style="edgeStyle=orthogonalEdgeStyle;curved=1;sketch=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Lucida Console;fontSize=16;" edge="1" parent="1" source="_0wtHSRPihGLpyA4_5dn-11" target="_0wtHSRPihGLpyA4_5dn-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-11" value="&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;b&gt;&lt;font color=&quot;#cccc00&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;(new vnode tree)&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;/b&gt;&lt;span style=&quot;background-color: initial; font-size: 16px;&quot;&gt;&amp;nbsp;{&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/span&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;type: &#39;div&#39;,&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 16px;&quot;&gt;children: &#39;b&#39;&lt;/span&gt;&lt;/blockquote&gt;&amp;nbsp;}&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0px 0px 0px 40px; border: none; padding: 0px; font-size: 16px;&quot;&gt;&lt;/blockquote&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#a0522d;sketch=1;fillStyle=solid;align=left;fontSize=16;fontFamily=Lucida Console;fontColor=#ffffff;strokeColor=#6D1F00;" vertex="1" parent="1">
+          <mxGeometry x="820" y="420" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-12" value="patch" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=-1;hachureGap=8;fillStyle=solid;fillColor=#CC0000;sketch=1;fontSize=21;gradientColor=none;fontStyle=1;fontColor=#f7f2f2;" vertex="1" parent="1">
+          <mxGeometry x="1069" y="350" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-13" value="&lt;b&gt;&amp;lt;div&amp;gt;b&amp;lt;/div&amp;gt;&lt;/b&gt;" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#ffe6cc;sketch=1;curveFitting=1;jiggle=2;fontSize=16;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-14" value="&lt;b&gt;&amp;lt;div&amp;gt;a&amp;lt;/div&amp;gt;&lt;/b&gt;" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#ffe6cc;sketch=1;curveFitting=1;jiggle=2;fontSize=16;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-20" value="&lt;span style=&quot;&quot;&gt;effect(()=&amp;gt;{&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;&quot;&gt;&amp;nbsp; &amp;nbsp;render(()=&amp;gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/span&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;	&lt;/span&gt;&lt;span style=&quot;&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;	&lt;/span&gt;h(&#39;div&#39;, name))&lt;/span&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;&quot;&gt;&amp;nbsp; &amp;nbsp;})&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;&quot;&gt;})&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/span&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;sketch=1;fillStyle=solid;fontFamily=Lucida Console;fontSize=16;fillColor=#6a00ff;align=center;fontColor=#ffffff;strokeColor=#3700CC;" vertex="1" parent="1">
+          <mxGeometry x="180" y="190" width="300" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-37" value="" style="shape=flexArrow;endArrow=classic;html=1;sketch=1;fontFamily=Lucida Console;fontSize=16;curved=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1180" y="380" as="sourcePoint" />
+            <mxPoint x="1300" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0wtHSRPihGLpyA4_5dn-38" value="重新渲染" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=18;fontFamily=Lucida Console;fontColor=#CC0066;labelBackgroundColor=#f4f1de;spacingTop=0;" vertex="1" connectable="0" parent="_0wtHSRPihGLpyA4_5dn-37">
+          <mxGeometry x="-0.4833" y="1" relative="1" as="geometry">
+            <mxPoint x="19" y="-19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
