@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-  <script>
-    console.log('同步任务1')
-    Promise.resolve().then(() => {
-      console.log('微任务1');
-      Promise.resolve().then(() => {
-        console.log('微任务2');
-        Promise.resolve().then(() => {
-          console.log('微任务3');
-        })
-      })
-    })
-    setTimeout(() => {
-      console.log('宏任务1');
-    }, 0)
-    console.log('同步任务2')
-  </script>
-  <script>
-    // 一个script相当于一个新的宏任务, 这里用来模拟下一次事件循环
-    console.log('下一个宏任务')
+  <div id="app"></div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script type="module">
+    const { createApp, ref,h, nextTick, render, effect  } = Vue;
+    const renderDOM = render; // 起个别名以方便跟render函数区分
+    const VueComp = {
+      setup() {
+        const name = ref('111');
+        const handleClick = () => {
+          name.value = '222';
+          nextTick(() => {
+            const text = document.querySelector("#app").textContent;
+            alert('当前Html内容: '+text);
+          });
+          name.value = '333';
+        }
+        return {
+          name,
+          handleClick,
+        }
+      },
+      render(){
+        return h('div', {onClick: () => this.handleClick() }, [this.name.value])
+      }
+    };
+    // 执行一次setup, 获得setup返回的响应式数据. 整个生命周期setup只会执行一次
+    const setupResult = VueComp.setup();
+    
+    const effectFn = () => {
+       // 将setupResult返回的数据bind到render函数中, 使render函数中可以使用this.xxx引用setup返回的数据
+       const subTree = VueComp.render.call(setupResult);
+       renderDOM(subTree, document.querySelector('#app'));
+    }
+    // effect包裹DOM更新数据, 其中包裹的callback函数包含的setupResult数据更新时, callback函数将重新执行
+    effect(effectFn)
   </script>
 </body>
 </html>
